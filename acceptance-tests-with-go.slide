@@ -1,7 +1,76 @@
-Acceptance Tests with Go
-Or: Testing is part of the domain
+Acceptance Testing in Go
+
 
 Ryan Faerman
 Software Engineer, Ultimate Software
 ryan_faerman@ultimatesoftware.com
 08 September 2015
+
+* This talk
+
+What are acceptance tests?
+
+Why not use something like Ruby + RSpec?
+
+What would an acceptance test in Go even look like?
+
+How can we make it better?
+
+* What are acceptance tests?
+
+* According to Wikipedia
+
+Acceptance Testing is:
+
+"...formal testing with respect to user needs, requirements, and business processes conducted to determine whether or not a system satisfies the acceptance criteria and to enable the user, customers or other authorized entity to determine whether or not to accept the system..."
+
+.caption https://en.wikipedia.org/wiki/Acceptance_testing
+
+* In the real world
+
+Acceptance testing is how we ensure our acceptance critera have been met.
+
+In the agile development world, these would be user stories:
+
+- As a user I should be able to...
+- As a user I should not be able to...
+- As a user, when I do *something*, I expect to...
+
+* Acceptance tests are generally slow
+
+- they test from the outside
+- they go over an actual network connection
+- run on real hardware
+- talk to real collaborators
+
+You probably won't be running these on every code change
+
+* Why not use something like Ruby + RSpec?
+
+* We already have a Rakefile, so let's use Ruby!
+
+Ruby is a dynamic language that is designed for "developer happiness".
+
+RSpec is a gem that provides a general testing framework that gives you:
+- expectations & matchers
+- mocks & stubbing
+- lifecycle hooks (before, after, around)
+- an entire DSL for testing
+
+* What does an RSpec test look like?
+
+As a user, I should be able to visit "/health-check" and get a response with status code 200 and a body of "ok".
+
+  describe 'healthcheck' do
+    subject { HTTParty.get(TARGET_HOST+'/health-check') }
+
+    it 'responds 200' do
+      expect(subject.code).to be 200
+    end
+
+    it 'responds ok' do
+      expect(subject.body.chomp).to eq 'ok'
+    end
+  end
+
+.caption Cue the Ruby Magic!

@@ -158,7 +158,10 @@ func abortLog(err interface{}) {
 }
 
 func TestItWorks(t *testing.T) {
-	res, err := goreq.Request{Uri: "http://" + ApplicationHost}.Do()
+	res, err := goreq.Request{
+		Uri:     "http://" + ApplicationHost,
+		Timeout: 1 * time.Second,
+	}.Do()
 	defer func() {
 		if res.Body != nil {
 			res.Body.Close()
@@ -169,7 +172,7 @@ func TestItWorks(t *testing.T) {
 		t.Fatalf("Unexpected Request error: %s", err)
 	}
 
-	if res.StatusCode != 200 {
+	if res.StatusCode != http.StatusOK {
 		t.Errorf("Expected to receive %d but got %d instead", http.StatusOK, res.StatusCode)
 	}
 }
