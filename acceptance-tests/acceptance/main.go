@@ -43,6 +43,7 @@ func main() {
 	changeURL := fmt.Sprintf("%sgo%s", baseChangeURL, *version)
 	http.Handle("/", NewServer(*version, changeURL, *pollPeriod))
 	time.Sleep(3 * time.Second)
+	fmt.Println("yoyoyoyoyo")
 	log.Fatal(http.ListenAndServe(*httpAddr, nil))
 }
 

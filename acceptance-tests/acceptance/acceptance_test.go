@@ -17,6 +17,7 @@ import (
 	"camlistore.org/pkg/netutil"
 
 	"github.com/franela/goreq"
+	"github.com/nbio/st"
 )
 
 const (
@@ -168,11 +169,7 @@ func TestItWorks(t *testing.T) {
 		}
 	}()
 
-	if err != nil {
-		t.Fatalf("Unexpected Request error: %s", err)
-	}
+	st.Assert(t, err, nil)
+	st.Expect(t, res.StatusCode, http.StatusOK)
 
-	if res.StatusCode != http.StatusOK {
-		t.Errorf("Expected to receive %d but got %d instead", http.StatusOK, res.StatusCode)
-	}
 }
