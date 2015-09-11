@@ -8,6 +8,8 @@ ryan_faerman@ultimatesoftware.com
 
 * This talk
 
+Why do we test at all?
+
 What are acceptance tests?
 
 Why not use something like Ruby + RSpec?
@@ -15,6 +17,53 @@ Why not use something like Ruby + RSpec?
 What would an acceptance test in Go even look like?
 
 How can we make it better?
+
+* Why do we test at all?
+
+* Why do we test at all?
+
+Let's paraphrase Uncle Bob:
+
+  Bad code slows us down.
+
+  The key to cleaning the [bad] code is to have a test suite that you trust with your life; because
+  then you won't be afraid to clean the code.
+
+  The tests enable the team to go fast and the system to stay healthy.
+
+.caption An excerpt from [[http://blog.8thlight.com/uncle-bob/2013/09/23/Test-first.html][Test First]] by [[https://en.wikipedia.org/wiki/Robert_Cecil_Martin][Uncle Bob]]
+
+
+* Testing is part of our code
+
+Testing shouldn't be an after-thought.
+
+Our craft is "computer science" not "computer magic".
+
+A key tenent of science is repeatability -- an experiment should be able to be repeated and get the same results.
+
+.image acceptance-tests/wizard.png 250 _
+.caption _Gopher_ by [[http://www.reneefrench.com][Renée French]]
+
+* It's ultimately about confidence
+
+You should never be afraid of your code.
+
+Testing give us some level of confidence that our code working.
+
+It enables us to say "This works now and in the future too! And I can prove it!"
+
+* Different Strokes for Different Folks
+
+- unit tests
+- integration tests
+- small, medium, large
+- black-box/outside-in vs mocking
+- acceptance tests
+
+.image acceptance-tests/dizzy.png 200 _
+.caption _Gopher_ by [[http://www.reneefrench.com][Renée French]]
+
 
 * What are acceptance tests?
 
@@ -74,3 +123,5 @@ As a user, I should be able to visit "/health-check" and get a response with sta
   end
 
 .caption Cue the Ruby Magic!
+
+* R
