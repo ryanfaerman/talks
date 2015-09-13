@@ -3,10 +3,12 @@ package acceptance_test
 import (
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/franela/goreq"
+	"github.com/nbio/st"
 )
 
 var (
@@ -14,19 +16,20 @@ var (
 )
 
 func acceptanceTest(t *testing.T) {
-	if TargetHost == "" {
-		t.Fatal("Cannot run acceptance tests. Missing TARGET_HOST environment variable.")
-	}
 	if testing.Short() {
 		t.Skip("This is an acceptance test")
 	}
+	if TargetHost == "" {
+		t.Fatal("Cannot run acceptance tests. Missing TARGET_HOST environment variable.")
+	}
+
 }
 
 func TestItWorks(t *testing.T) {
-	acceptanceTest(t)
+	acceptanceTest(t) // HL
 
 	res, err := goreq.Request{
-		Uri:     TargetHost,
+		Uri:     TargetHost + "/health-check",
 		Timeout: 1 * time.Second,
 	}.Do()
 	defer func() {
@@ -35,11 +38,10 @@ func TestItWorks(t *testing.T) {
 		}
 	}()
 
-	if err != nil {
-		t.Fatalf("Unexpected Request error: %s", err)
-	}
+	st.Assert(t, err, nil)
+	st.Expect(t, res.StatusCode, http.StatusOK)
 
-	if res.StatusCode != http.StatusOK {
-		t.Errorf("Expected to receive %d but got %d instead", http.StatusOK, res.StatusCode)
-	}
+	body, err := res.Body.ToString()
+	st.Assert(t, err, nil)
+	st.Expect(t, strings.TrimSpace(body), "ok")
 }

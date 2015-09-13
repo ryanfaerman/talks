@@ -40,13 +40,11 @@ func findApplicationName() string {
 
 func TestMain(m *testing.M) {
 	flag.Parse()
-
 	killPrevious()
 
 	if err := build(); err != nil {
 		abortLog(err)
 	}
-
 	process, err := run()
 	if err != nil {
 		abortLog(err)
@@ -61,9 +59,7 @@ func TestMain(m *testing.M) {
 
 	verboseLog("Starting test suite")
 	suite := m.Run()
-
 	kill(process)
-
 	os.Exit(suite)
 }
 
@@ -76,7 +72,7 @@ func build() error {
 	cmd.Stdout, cmd.Stderr = &stdout, &stderr
 
 	if err := cmd.Run(); err != nil {
-		err = fmt.Errorf("%v%v", stderr.String(), err)
+		return fmt.Errorf("%v%v", stderr.String(), err)
 	}
 
 	return nil
@@ -87,14 +83,14 @@ func run() (*os.Process, error) {
 
 	cmd := exec.Command("./" + ApplicationName)
 
-	if testing.Verbose() {
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-	}
+	if testing.Verbose() { // HL
+		cmd.Stdout = os.Stdout // HL
+		cmd.Stderr = os.Stderr // HL
+	} // HL
 
-	if err := cmd.Start(); err != nil {
-		log.Fatal(err)
-	}
+	if err := cmd.Start(); err != nil { // HL
+		log.Fatal(err) // HL
+	} // HL
 
 	verboseLog("Child process started with PID:", cmd.Process.Pid)
 	return cmd.Process, nil
@@ -135,9 +131,10 @@ func killPrevious() {
 
 func waitForReachable(timeout time.Duration) error {
 	verboseLog("Waiting up to", StartupTimeout, "seconds for", ApplicationName, "to be reachable at", ApplicationHost)
-	if err := netutil.AwaitReachable(ApplicationHost, timeout); err != nil {
-		return err
-	}
+
+	if err := netutil.AwaitReachable(ApplicationHost, timeout); err != nil { // HL
+		return err // HL
+	} // HL
 
 	verboseLog("Application Host is reachable, resuming")
 	return nil
@@ -158,9 +155,17 @@ func abortLog(err interface{}) {
 	os.Exit(1)
 }
 
+func acceptanceTest(t *testing.T) {
+	if testing.Short() {
+		t.Skip("This is an acceptance test")
+	}
+}
+
 func TestItWorks(t *testing.T) {
+	acceptanceTest(t)
+
 	res, err := goreq.Request{
-		Uri:     "http://" + ApplicationHost,
+		Uri:     "http://" + ApplicationHost, // HL
 		Timeout: 1 * time.Second,
 	}.Do()
 	defer func() {
@@ -171,5 +176,4 @@ func TestItWorks(t *testing.T) {
 
 	st.Assert(t, err, nil)
 	st.Expect(t, res.StatusCode, http.StatusOK)
-
 }

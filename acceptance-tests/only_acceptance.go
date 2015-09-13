@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/franela/goreq"
+	"github.com/nbio/st"
 )
 
 var (
@@ -33,11 +35,10 @@ func TestItWorks(t *testing.T) {
 		}
 	}()
 
-	if err != nil {
-		t.Fatalf("Unexpected Request error: %s", err)
-	}
+	st.Assert(t, err, nil)
+	st.Expect(t, res.StatusCode, http.StatusOK)
 
-	if res.StatusCode != http.StatusOK {
-		t.Errorf("Expected to receive %d but got %d instead", http.StatusOK, res.StatusCode)
-	}
+	body, err := res.Body.ToString()
+	st.Assert(t, err, nil)
+	st.Expect(t, strings.TrimSpace(body), "ok")
 }
